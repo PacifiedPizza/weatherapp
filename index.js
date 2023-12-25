@@ -5,15 +5,24 @@ var desc = document.getElementsByClassName("desc")[0];
 
 btn.addEventListener('click', function () {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${placeinput.value}&units=metric&appid=e268e7c042f3b19a2d1bad1f552bc642`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('City not found');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            displaydata(data);
+        })
+        .catch(err => alert(err.message));
+});
 
-        .then(response => response.json())
-        .then(displaydata)
-        .catch(err => alert('Wrong City name'));
-})
+
 
 var displaydata = (weather) => {
     temp.innerText = `${weather.main.temp}°C`;
-    desc.innerText = `${weather.weather[0].description}`;Ï
+    desc.innerText = `${weather.weather[0].description}`;
 }
 
 $('input[type="text"]').click(function () {
@@ -25,6 +34,9 @@ $('input[type="text"]').click(function () {
         $('body').css("background-image", "url(img/sunny.jpg)");
     } else if (descText.includes("rain")) {
         $('body').css("background-image", "url(img/rainy.jpg)");
+    }
+    else if (descText.includes("mist")) {
+        $('body').css("background-image", "url(img/mist.jpg)");
     }
 });
 
